@@ -1,0 +1,26 @@
+
+  <div class="table-container">
+    <h2>Subjects List</h2>
+    <table class="subjects-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Subject Code</th>
+          <th>Title</th>
+          <th>Class</th>
+          <th>Name</th>
+          <th>Teacher's Surname</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let subject of subjects">
+        <tr>
+          <td><i class="edit-icon">✏️</i></td>
+          <td>{{ subject.sCode }}</td>
+          <td>{{ subject.sTitle }}</td>
+          <td>{{ subject.sClass }}</td>
+          <td>{{ subject.stName }}</td>
+          <td>{{ subject.stSurname }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
