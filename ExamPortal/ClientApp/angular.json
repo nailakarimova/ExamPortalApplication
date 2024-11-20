@@ -129,5 +129,8 @@
       }
     }
   },
-  "defaultProject": "ExamPortal"
+  "defaultProject": "ExamPortal",
+  "cli": {
+    "analytics": false
+  }
 }
