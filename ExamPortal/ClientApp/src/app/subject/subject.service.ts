@@ -25,7 +25,11 @@ export class SubjectService {
     return this.http.get<Subject[]>(this.apiUrl);
   }
 
-  getSubject(id: number): Observable<Subject> {
-    return this.http.get<Subject>(`${this.apiUrl}/${id}`);
+  deleteSubject(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  updateSubject(id: number, subject: any) {
+    return this.http.put(`${this.apiUrl}/${id}`, subject);
   }
 }

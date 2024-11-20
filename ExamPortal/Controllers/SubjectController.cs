@@ -20,95 +20,55 @@ namespace ExamPortal.Controllers
             _context = context;
         }
 
-        // GET: /Subjects
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TSubject>>> GetSubjects()
-        {           
+        {
             return await _context.TSubjects.Where(s => s.SStatus == true).ToListAsync();
         }
 
-        // GET: /Subjects/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TSubject>> GetSubject(decimal id)
-        {
-            if (_context.TSubjects == null)
-            {
-                return NotFound();
-            }
-            var tSubject = await _context.TSubjects.FindAsync(id);
-
-            if (tSubject == null)
-            {
-                return NotFound();
-            }
-
-            return tSubject;
-        }
-
-        // PUT: /Subjects/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubject(decimal id, TSubject tSubject)
+        public async Task<IActionResult> PutSubject(decimal id, TSubject updatedSubject)
         {
-            if (id != tSubject.SId)
+            if (id != updatedSubject.SId)
             {
-                return BadRequest();
+                return BadRequest(new { message = "Subject ID mismatch" });
             }
 
-            _context.Entry(tSubject).State = EntityState.Modified;
-
-            try
+            var subject = await _context.TSubjects.FindAsync(id);
+            if (subject == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SubjectExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(new { message = "Subject not found" });
             }
 
-            return NoContent();
-        }
+            subject.SCode = updatedSubject.SCode;
+            subject.STitle = updatedSubject.STitle;
+            subject.SClass = updatedSubject.SClass;
+            subject.STName = updatedSubject.STName;
+            subject.STSurname = updatedSubject.STSurname;
+            subject.SStatus = updatedSubject.SStatus;
 
-        // POST: /Subjects
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TSubject>> PostSubject(TSubject tSubject)
-        {
-            if (_context.TSubjects == null)
-            {
-                return Problem("Entity set 'DbExamPortalContext.TSubjects'  is null.");
-            }
-            _context.TSubjects.Add(tSubject);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTSubject", new { id = tSubject.SId }, tSubject);
+            return Ok(new { message = "Subject updated successfully" });
         }
-
-        // DELETE: /Subjects/5
+        
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSubject(decimal id)
+        public async Task<IActionResult> DeleteSubject(int id)
         {
             if (_context.TSubjects == null)
             {
                 return NotFound();
             }
-            var tSubject = await _context.TSubjects.FindAsync(id);
+            var tSubject = _context.TSubjects.FirstOrDefault(subj => subj.SId == id);
             if (tSubject == null)
             {
                 return NotFound();
             }
 
-            _context.TSubjects.Remove(tSubject);
+            tSubject.SStatus = false;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { message = "Subject deleted successfully" });
         }
 
         private bool SubjectExists(decimal id)
