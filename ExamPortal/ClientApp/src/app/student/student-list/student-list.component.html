@@ -1,0 +1,65 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<div class="table-container">
+  <h2>Şagirdlərin siyahısı</h2>
+  <div class="create-btn-container">
+    <button (click)="openCreateModal()" class="create-btn">Yeni</button>
+  </div>
+  <table class="students-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Şagirdin nömrəsi</th>
+        <th>Şagirdin adı</th>
+        <th>Şagirdin soyadı</th>
+        <th>Sinif</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let student of students; trackBy: trackByStudentId">
+      <tr>
+        <td><i class="fa fa-edit edit-icon" (click)="openEditModal(student)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(student.sId)"></i></td>
+        <td>{{ student.sNumber }}</td>
+        <td>{{ student.sName }}</td>
+        <td>{{ student.sSurname }}</td>
+        <td>{{ student.sClass }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h3>DİQQƏT!</h3>
+    <p>Seçilmiş şagirdi silməyə əminsiniz?</p>
+    <div class="modal-actions">
+      <button class="confirm-btn" (click)="confirmRemove()">Bəli</button>
+      <button class="cancel-btn" (click)="closeModal('deleteModal')">Xeyr</button>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>{{ studentToEdit.sId == 0 ? ('Yeni dərs'): ('Dəyişdir') }}</h3>
+    <form (ngSubmit)="submitEdit()">
+      <div>
+        <label for="sNumber">Şagirdin nömrəsi</label>
+        <input id="sNumber" [(ngModel)]="studentToEdit.sNumber" name="sNumber" required>
+      </div>
+      <div>
+        <label for="sName">Şagirdin adı</label>
+        <input id="sName" [(ngModel)]="studentToEdit.sName" name="sName" required>
+      </div>
+      <div>
+        <label for="sSurname">Şagirdin soyadı</label>
+        <input id="sSurname" [(ngModel)]="studentToEdit.sSurname" name="sSurname" required>
+      </div>
+      <div>
+        <label for="sClass">Sinif</label>
+        <input id="sClass" [(ngModel)]="studentToEdit.sClass" name="sClass" required>
+      </div>
+      <button type="submit">Yadda saxla</button>
+      <button type="button" (click)="closeModal('editModal')">İmtina</button>
+    </form>
+  </div>
+</div>
