@@ -12,9 +12,9 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
 import { SubjectListComponent } from './subject/subject-list/subject-list.component';
 
-//import { StudentListComponent } from '../student/student-list/student-list.component';
+import { StudentListComponent } from './student/student-list/student-list.component';
 
-//import { ExamListComponent } from '../exam/exam-list/exam-list.component';
+//import { ExamListComponent } from './exam/exam-list/exam-list.component';
 
 
 @NgModule({
@@ -25,6 +25,7 @@ import { SubjectListComponent } from './subject/subject-list/subject-list.compon
     CounterComponent,
     FetchDataComponent,
     SubjectListComponent,
+    StudentListComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,7 +36,7 @@ import { SubjectListComponent } from './subject/subject-list/subject-list.compon
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'subject', component: SubjectListComponent },
-      //{ path: 'student', component: StudentListComponent },
+      { path: 'student', component: StudentListComponent },
       //{ path: 'exam', component: ExamListComponent },
     ])
   ],
