@@ -15,6 +15,12 @@ export class SubjectListComponent implements OnInit {
     deleteModal: false,
   };
 
+  constructor(private subjectService: SubjectService) { }
+
+  ngOnInit(): void {
+    this.getSubjects();
+  }
+
   createEmptySubject(): Subject {
     return {
       sId: 0,
@@ -30,12 +36,6 @@ export class SubjectListComponent implements OnInit {
   subjectToRemove: number | null = null;
   subjectToEdit: Subject = this.createEmptySubject();
   isEditMode: boolean = true;
-
-  constructor(private subjectService: SubjectService) { }
-
-  ngOnInit(): void {
-    this.getSubjects();
-  }
 
   getSubjects(): void {
     this.subjectService.getSubjects().subscribe(subjects => {
@@ -145,6 +145,4 @@ export class SubjectListComponent implements OnInit {
     this.subjectToEdit = this.createEmptySubject();
     this.openModal('editModal');
   }
-
-
 }

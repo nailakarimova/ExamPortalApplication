@@ -81,8 +81,10 @@ namespace ExamPortal.Controllers
             {
                 return NotFound();
             }
+
             TSubject tSubject = _context.TSubjects
                                     .FirstOrDefault(subj => subj.SId == id);
+
             if (tSubject == null)
             {
                 return NotFound();
