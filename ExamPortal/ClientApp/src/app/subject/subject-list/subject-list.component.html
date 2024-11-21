@@ -1,21 +1,24 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 <div class="table-container">
-  <h2>Subjects List</h2>
+  <h2>Dərslərin siyahısı</h2>
+  <div class="create-btn-container">
+    <button (click)="openCreateModal()" class="create-btn">Yeni</button>
+  </div>
   <table class="subjects-table">
     <thead>
       <tr>
         <th></th>
-        <th>Subject Code</th>
-        <th>Title</th>
-        <th>Class</th>
-        <th>Name</th>
-        <th>Teacher's Surname</th>
+        <th>Dərsin kodu</th>
+        <th>Dərsin adı</th>
+        <th>Sinif</th>
+        <th>Müəllimin adı</th>
+        <th>Müəllimin soyadı</th>
       </tr>
     </thead>
-    <tbody *ngFor="let subject of subjects">
+    <tbody *ngFor="let subject of subjects; trackBy: trackBySubjectId">
       <tr>
-        <td><i class="fa fa-edit" (click)="openEditModal(subject)"></i> | <i class="fa fa-trash" (click)="openDeleteModal(subject.sId)"></i></td>
+        <td><i class="fa fa-edit edit-icon" (click)="openEditModal(subject)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(subject.sId)"></i></td>
         <td>{{ subject.sCode }}</td>
         <td>{{ subject.sTitle }}</td>
         <td>{{ subject.sClass }}</td>
@@ -28,41 +31,41 @@
 
 <div id="deleteModal" class="modal">
   <div class="modal-content">
-    <h3>Confirm Deletion</h3>
-    <p>Are you sure you want to remove this subject?</p>
+    <h3>DİQQƏT!</h3>
+    <p>Seçilmiş dərsi silməyə əminsiniz?</p>
     <div class="modal-actions">
-      <button class="confirm-btn" (click)="confirmRemove()">Yes</button>
-      <button class="cancel-btn" (click)="closeModal('deleteModal')">No</button>
+      <button class="confirm-btn" (click)="confirmRemove()">Bəli</button>
+      <button class="cancel-btn" (click)="closeModal('deleteModal')">Xeyr</button>
     </div>
   </div>
 </div>
 
 <div id="editModal" class="modal">
   <div class="modal-content">
-    <h3>Edit Subject</h3>
+    <h3>{{ subjectToEdit.sId == 0 ? ('Yeni dərs'): ('Dəyişdir') }}</h3>
     <form (ngSubmit)="submitEdit()">
       <div>
-        <label for="sCode">Subject Code</label>
+        <label for="sCode">Dərsin kodu</label>
         <input id="sCode" [(ngModel)]="subjectToEdit.sCode" name="sCode" required>
       </div>
       <div>
-        <label for="sTitle">Title</label>
+        <label for="sTitle">Dərsin adı</label>
         <input id="sTitle" [(ngModel)]="subjectToEdit.sTitle" name="sTitle" required>
       </div>
       <div>
-        <label for="sClass">Class</label>
+        <label for="sClass">Sinif</label>
         <input id="sClass" [(ngModel)]="subjectToEdit.sClass" name="sClass" required>
       </div>
       <div>
-        <label for="stName">Teacher's Name</label>
+        <label for="stName">Müəllimin adı</label>
         <input id="stName" [(ngModel)]="subjectToEdit.stName" name="stName" required>
       </div>
       <div>
-        <label for="stSurname">Teacher's Surname</label>
+        <label for="stSurname">Müəllimin soyadı</label>
         <input id="stSurname" [(ngModel)]="subjectToEdit.stSurname" name="stSurname" required>
       </div>
-      <button type="submit">Save</button>
-      <button type="button" (click)="closeModal('editModal')">Cancel</button>
+      <button type="submit">Yadda saxla</button>
+      <button type="button" (click)="closeModal('editModal')">İmtina</button>
     </form>
   </div>
 </div>

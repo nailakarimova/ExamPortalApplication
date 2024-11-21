@@ -15,8 +15,21 @@ export class SubjectListComponent implements OnInit {
     deleteModal: false,
   };
 
+  createEmptySubject(): Subject {
+    return {
+      sId: 0,
+      sCode: '',
+      sTitle: '',
+      sClass: 0,
+      stName: '',
+      stSurname: '',
+      sStatus: true
+    };
+  }
+
   subjectToRemove: number | null = null;
-  subjectToEdit: any = {};
+  subjectToEdit: Subject = this.createEmptySubject();
+  isEditMode: boolean = true;
 
   constructor(private subjectService: SubjectService) { }
 
@@ -37,18 +50,18 @@ export class SubjectListComponent implements OnInit {
 
     const modal = document.getElementById(modalId);
     if (modal) {
-      modal.classList.remove('show'); 
+      modal.classList.remove('show');
       setTimeout(() => {
         modal.style.display = 'none';
-      }, 300); 
+      }, 300);
     }
   }
 
   openModal(modalId: string): void {
     const modal = document.getElementById(modalId);
     if (modal) {
-      modal.style.display = 'flex'; 
-      setTimeout(() => modal.classList.add('show'), 10); 
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
     }
   }
 
@@ -71,7 +84,7 @@ export class SubjectListComponent implements OnInit {
   removeSubject(subjectId: number): void {
     this.subjectService.deleteSubject(subjectId).subscribe({
       next: (response) => {
-        this.subjects = this.subjects.filter(subject => subject.sId !== subjectId); 
+        this.subjects = this.subjects.filter(subject => subject.sId !== subjectId);
       },
       error: (err) => {
         alert('Error deleting subject: ' + err);
@@ -79,27 +92,59 @@ export class SubjectListComponent implements OnInit {
     });
   }
 
-  openEditModal(subject: any): void {
-    this.subjectToEdit = { ...subject }; 
+  openEditModal(subject: Subject): void {
+    this.isEditMode = true;
     this.modalState.editModal = true;
+    this.subjectToEdit = { ...subject };
     setTimeout(() => {
       this.openModal('editModal');
     }, 10);
   }
 
   submitEdit(): void {
-    this.subjectService.updateSubject(this.subjectToEdit.sId, this.subjectToEdit).subscribe({
-      next: (response) => {
-        const index = this.subjects.findIndex(subject => subject.sId === this.subjectToEdit.sId);
-        if (index !== -1) {
-          this.subjects[index] = { ...this.subjectToEdit }; 
+    if (this.isEditMode) {
+      this.subjectService.updateSubject(this.subjectToEdit.sId, this.subjectToEdit).subscribe({
+        next: (response) => {
+          const index = this.subjects.findIndex(subject => subject.sId === this.subjectToEdit.sId);
+          if (index !== -1) {
+            //this.subjects[index] = { ...response };
+            const updatedSubject = this.subjects[index];
+            updatedSubject.sCode = this.subjectToEdit.sCode;
+            updatedSubject.sTitle = this.subjectToEdit.sTitle;
+            updatedSubject.sClass = this.subjectToEdit.sClass;
+            updatedSubject.stName = this.subjectToEdit.stName;
+            updatedSubject.stSurname = this.subjectToEdit.stSurname;
+            updatedSubject.sStatus = this.subjectToEdit.sStatus;
+          }
+          this.closeModal('editModal');
+        },
+        error: (err) => {
+          alert('Error updating subject: ' + err.message);
         }
-        this.closeModal('editModal');
-      },
-      error: (err) => {
-        alert('Error updating subject:' + err);
-      }
-    });
+      });
+    } else {
+      this.subjectService.createSubject(this.subjectToEdit).subscribe({
+        next: (response: Subject) => {
+          this.subjects.push(response as Subject);
+          this.closeModal('editModal');
+        },
+        error: (err: { message: string; }) => {
+          alert('Error creating subject: ' + err.message);
+        }
+      });
+    }
   }
+
+  trackBySubjectId(index: number, subject: Subject): number {
+    return subject.sId;
+  }
+
+  openCreateModal(): void {
+    this.isEditMode = false;
+    this.modalState.editModal = true;
+    this.subjectToEdit = this.createEmptySubject();
+    this.openModal('editModal');
+  }
+
 
 }

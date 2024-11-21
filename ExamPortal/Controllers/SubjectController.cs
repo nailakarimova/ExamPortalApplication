@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExamPortal.Models;
+using ExamPortal.Helpers;
 
 namespace ExamPortal.Controllers
 {
@@ -23,18 +19,44 @@ namespace ExamPortal.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TSubject>>> GetSubjects()
         {
-            return await _context.TSubjects.Where(s => s.SStatus == true).ToListAsync();
+            return await _context.TSubjects
+                                   .Where(s => s.SStatus == true)
+                                   .ToListAsync();
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<TSubject>>> GetSubjectById(int id)
+        {
+            try
+            {
+                TSubject subject = await _context.TSubjects
+                                            .Where(s => s.SId == id && s.SStatus == true)
+                                            .FirstOrDefaultAsync();
+                if (subject == null)
+                {
+                    return NotFound($"Subject with ID {id} not found.");
+                }
+
+                return Ok(subject);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSubject(decimal id, TSubject updatedSubject)
+        public async Task<IActionResult> PutSubject(int id, TSubject updatedSubject)
         {
             if (id != updatedSubject.SId)
             {
                 return BadRequest(new { message = "Subject ID mismatch" });
             }
 
-            var subject = await _context.TSubjects.FindAsync(id);
+            TSubject subject = await _context.TSubjects
+                                            .Where(s => s.SId == id && s.SStatus == true)
+                                            .FirstOrDefaultAsync(); 
+
             if (subject == null)
             {
                 return NotFound(new { message = "Subject not found" });
@@ -59,7 +81,8 @@ namespace ExamPortal.Controllers
             {
                 return NotFound();
             }
-            var tSubject = _context.TSubjects.FirstOrDefault(subj => subj.SId == id);
+            TSubject tSubject = _context.TSubjects
+                                    .FirstOrDefault(subj => subj.SId == id);
             if (tSubject == null)
             {
                 return NotFound();
@@ -70,6 +93,38 @@ namespace ExamPortal.Controllers
 
             return Ok(new { message = "Subject deleted successfully" });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSubject([FromBody] SubjectDto subjectDto)
+        {
+            if (subjectDto == null)
+            {
+                return BadRequest("Subject data is required.");
+            }
+
+            TSubject subject = new TSubject
+            {
+                SCode = subjectDto.SCode,
+                STitle = subjectDto.STitle,
+                SClass = subjectDto.SClass,
+                STName = subjectDto.StName,
+                STSurname = subjectDto.StSurname,
+                SStatus = subjectDto.SStatus
+            };
+
+            try
+            {
+                _context.TSubjects.Add(subject); 
+                await _context.SaveChangesAsync(); 
+
+                return CreatedAtAction(nameof(GetSubjectById), new { id = subject.SId }, subject); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
 
         private bool SubjectExists(decimal id)
         {
