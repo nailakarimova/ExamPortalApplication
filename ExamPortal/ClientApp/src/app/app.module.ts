@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -14,7 +15,7 @@ import { SubjectListComponent } from './subject/subject-list/subject-list.compon
 
 import { StudentListComponent } from './student/student-list/student-list.component';
 
-//import { ExamListComponent } from './exam/exam-list/exam-list.component';
+import { ExamListComponent } from './exam/exam-list/exam-list.component';
 
 
 @NgModule({
@@ -26,9 +27,11 @@ import { StudentListComponent } from './student/student-list/student-list.compon
     FetchDataComponent,
     SubjectListComponent,
     StudentListComponent,
+    ExamListComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    NgxPaginationModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
@@ -37,7 +40,7 @@ import { StudentListComponent } from './student/student-list/student-list.compon
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'subject', component: SubjectListComponent },
       { path: 'student', component: StudentListComponent },
-      //{ path: 'exam', component: ExamListComponent },
+      { path: 'exam', component: ExamListComponent },
     ])
   ],
   providers: [],

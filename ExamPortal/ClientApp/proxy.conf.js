@@ -9,7 +9,7 @@ const PROXY_CONFIG = [
       "/weatherforecast",
       "/subject",
       "/student",
-      //"/exam",
+      "/exam",
    ],
     target: target,
     secure: false,
