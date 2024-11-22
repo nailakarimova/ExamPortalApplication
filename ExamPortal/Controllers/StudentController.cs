@@ -56,6 +56,7 @@ namespace ExamPortal.Controllers
             {
                 return BadRequest(new { message = "Student ID mismatch" });
             }
+
             TStudent student = await _context.TStudents
                                             .Where(s => s.SId == id && s.SStatus == true)
                                             .FirstOrDefaultAsync();
