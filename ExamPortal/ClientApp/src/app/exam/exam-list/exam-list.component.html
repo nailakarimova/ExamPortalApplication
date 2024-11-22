@@ -1,0 +1,99 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<div class="table-container">
+  <h2>İmtahanların siyahısı</h2>
+  <div class="create-btn-container">
+    <button (click)="openCreateModal()" class="create-btn">Yeni</button>
+  </div>
+  <table class="exams-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Dərsin kodu</th>
+        <th>Dərsin adı</th>
+        <th>Şagirdin nömrəsi</th>
+        <th>Şagirdin adı</th>
+        <th>Şagirdin soyadı</th>
+        <th>Tarix</th>
+        <th>Qiymət</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let exam of exams | paginate: { itemsPerPage: 5, currentPage: currentPage }" >
+      <tr>
+        <td><i class="fa fa-edit edit-icon" (click)="openEditModal(exam)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(exam.eId)"></i></td>
+        <td>{{ exam.esCode }}</td>
+        <td>{{ exam.subjectTitle }}</td>
+        <td>{{ exam.esNumber }}</td>
+        <td>{{ exam.studentName }}</td>
+        <td>{{ exam.studentSurname }}</td>
+        <td>{{ exam.eDate }}</td>
+        <td>{{ exam.eGrade }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+</div>
+
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h3>DİQQƏT!</h3>
+    <p>Seçilmiş imtahanı silməyə əminsiniz?</p>
+    <div class="modal-actions">
+      <button class="confirm-btn" (click)="confirmRemove()">Bəli</button>
+      <button class="cancel-btn" (click)="closeModal('deleteModal')">Xeyr</button>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>{{ examToEdit.eId == 0 ? ('Yeni imtahan'): ('Dəyişdir') }}</h3>
+    <form #examForm="ngForm" (ngSubmit)="submitEdit()">
+      <div>
+        <label for="subject">Dərs</label>
+        <select id="subject" [(ngModel)]="examToEdit.esCode" name="subject" required #subject="ngModel">
+          <option value="" disabled selected>Seç</option>
+          <option *ngFor="let subject of subjects" [value]="subject.sCode">{{ subject.sCode }} - {{ subject.sTitle }}</option>
+        </select>
+        <div *ngIf="subject.invalid" class="error">
+          Məcburi xana
+        </div>
+      </div>
+      <div>
+        <label for="student">Şagird</label>
+        <select id="student" [(ngModel)]="examToEdit.esNumber" name="student" required #student="ngModel">
+          <option value="0" disabled selected>Seç</option>
+          <option *ngFor="let student of students" [value]="student.sNumber">{{ student.sNumber }}. {{ student.sName }} {{ student.sSurname }}</option>
+        </select>
+        <div *ngIf="(student.invalid || examToEdit.esNumber === 0)" class="error">
+          Məcburi xana
+        </div>
+      </div>
+      <div>
+        <label for="eDate">Tarix</label>
+        <input id="eDate" [(ngModel)]="examToEdit.eDate" type="date" name="eDate" required #eDate="ngModel">
+        <div *ngIf="eDate.invalid" class="error">
+          Məcburi xana
+        </div>
+      </div>
+      <div>
+        <label for="eGrade">Qiymət</label>
+        <input id="eGrade" [(ngModel)]="examToEdit.eGrade" type="number" name="eGrade" min="0" max="5" required #eGrade="ngModel">
+        <div *ngIf="eGrade.invalid" class="error">
+          Qiymət 0 və 5 aralığında olmalıdır
+        </div>
+      </div>
+      <button [disabled]="!isFormValid()"
+              [ngClass]="{
+                          'btn-invalid': !isFormValid(),
+                          'btn-valid': isFormValid()
+                        }"
+              (click)="submitEdit()">
+        Yadda saxla
+      </button>
+
+      <!--<button type="button" [disabled]="examForm.invalid" (click)="submitEdit()">Yadda saxla</button>-->
+      <button type="button" (click)="closeModal('editModal')">İmtina</button>
+    </form>
+  </div>
+</div>
