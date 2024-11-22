@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ExamPortal.Models;
 
@@ -26,7 +27,9 @@ public partial class TExam
     /// </summary>
     public bool? EStatus { get; set; }
 
-    public virtual TSubject ESCodeNavigation { get; set; } = null!;
+    [JsonIgnore]
+    public virtual TSubject? ESCodeNavigation { get; set; } = null!;
 
-    public virtual TStudent ESNumberNavigation { get; set; } = null!;
+    [JsonIgnore]
+    public virtual TStudent? ESNumberNavigation { get; set; } = null!;
 }
