@@ -25,6 +25,7 @@ namespace ExamPortal.Controllers
           }
             return await _context.TStudents
                                    .Where(s => s.SStatus == true)
+                                   .OrderByDescending(s => s.SId)
                                    .ToListAsync();
         }
 

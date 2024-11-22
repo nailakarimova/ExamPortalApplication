@@ -15,7 +15,7 @@
         <th>Sinif</th>
       </tr>
     </thead>
-    <tbody *ngFor="let student of students; trackBy: trackByStudentId">
+    <tbody *ngFor="let student of students | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
       <tr>
         <td><i class="fa fa-edit edit-icon" (click)="openEditModal(student)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(student.sId)"></i></td>
         <td>{{ student.sNumber }}</td>
@@ -25,6 +25,7 @@
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
 </div>
 
 <div id="deleteModal" class="modal">

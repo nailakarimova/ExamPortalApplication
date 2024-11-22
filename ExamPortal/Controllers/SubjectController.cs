@@ -21,6 +21,7 @@ namespace ExamPortal.Controllers
         {
             return await _context.TSubjects
                                    .Where(s => s.SStatus == true)
+                                   .OrderByDescending(s => s.SId)
                                    .ToListAsync();
         }
         

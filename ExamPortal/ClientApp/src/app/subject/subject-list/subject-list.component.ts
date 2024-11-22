@@ -10,6 +10,19 @@ export class SubjectListComponent implements OnInit {
 
   subjects: Subject[] = [];
 
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+
+  get paginatedExams() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.subjects.slice(startIndex, endIndex);
+  }
+
+  setPage(page: number) {
+    this.currentPage = page;
+  }
+
   modalState: { [key: string]: boolean } = {
     editModal: false,
     deleteModal: false,
@@ -133,10 +146,6 @@ export class SubjectListComponent implements OnInit {
         }
       });
     }
-  }
-
-  trackBySubjectId(index: number, subject: Subject): number {
-    return subject.sId;
   }
 
   openCreateModal(): void {

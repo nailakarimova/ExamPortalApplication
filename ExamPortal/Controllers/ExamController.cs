@@ -51,6 +51,8 @@ namespace ExamPortal.Controllers
                                                 EGrade = es.Exam.EGrade,
                                                 EStatus = es.Exam.EStatus
                                             }) // Join with students where S_STATUS = 1
+
+                                    .OrderByDescending(e => e.EId)
                                     .ToListAsync();
         }
 

@@ -10,6 +10,19 @@ export class StudentListComponent implements OnInit {
 
   students: Student[] = [];
 
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+
+  get paginatedExams() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.students.slice(startIndex, endIndex);
+  }
+
+  setPage(page: number) {
+    this.currentPage = page;
+  }
+
   modalState: { [key: string]: boolean } = {
     editModal: false,
     deleteModal: false,
@@ -131,10 +144,6 @@ export class StudentListComponent implements OnInit {
         }
       });
     }
-  }
-
-  trackByStudentId(index: number, student: Student): number {
-    return student.sId;
   }
 
   openCreateModal(): void {

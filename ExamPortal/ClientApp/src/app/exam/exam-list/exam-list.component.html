@@ -18,7 +18,7 @@
         <th>Qiymət</th>
       </tr>
     </thead>
-    <tbody *ngFor="let exam of exams | paginate: { itemsPerPage: 5, currentPage: currentPage }" >
+    <tbody *ngFor="let exam of exams | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" >
       <tr>
         <td><i class="fa fa-edit edit-icon" (click)="openEditModal(exam)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(exam.eId)"></i></td>
         <td>{{ exam.esCode }}</td>

@@ -16,7 +16,7 @@
         <th>Müəllimin soyadı</th>
       </tr>
     </thead>
-    <tbody *ngFor="let subject of subjects; trackBy: trackBySubjectId">
+    <tbody *ngFor="let subject of subjects | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
       <tr>
         <td><i class="fa fa-edit edit-icon" (click)="openEditModal(subject)"></i> | <i class="fa fa-trash delete-icon" (click)="openDeleteModal(subject.sId)"></i></td>
         <td>{{ subject.sCode }}</td>
@@ -27,6 +27,7 @@
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
 </div>
 
 <div id="deleteModal" class="modal">
